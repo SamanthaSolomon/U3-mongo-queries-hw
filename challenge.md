@@ -21,18 +21,31 @@ db.burgers.find({})
 
 **Prompt:** What is the command to start the `mongo` server?
 
+`brew services start mongodb-community@4.4`
+
 **Prompt:** What is the command to connect to the `mongo` shell?
+
+`mongo`
 
 **Prompt:** What is the command for listing all `mongo` databases?
 
-**Prompt:** What command would you use to create a database called `burgers`?
+`show dbs`
+
+**Prompt:** What command would you use to create a 
+database called `burgers`?
+
+`db burgers`
 
 **Prompt:** What command would you use to add the collection `burger` to your
 `burgers` database?
 
+`db.burger.insert({"burger" : "burger"})`
+
 **Prompt:** What is the command for listing all collections in a database?
 
-## Inserting
+`show collections`
+
+## Inserting"
 
 ### Prompts
 
@@ -43,12 +56,29 @@ following:
 * a `cheese` property set to `false`
 * a `toppings` set to an array with `ketchup`, `onions`, and `pickles`
 
+`db.burger.insert(
+    {"burger" : {
+        "patty" : "beef",
+        "cheese" : "false",
+        "toppings" : ["ketchup", "onions", "pickles"]
+        }
+    }
+)`
+
 **Prompt:** Insert 10 burgers into the `burgers` collection with the following:
 
 * a `patty` property that is set to one of: `beef`, `turkey`, or `veggie`
 * a `cheese` property that is either `true` or `false`
 * a `toppings` property that is either one of `ketchup`, `onions`, `pickles`,
   `mustard`, and `mayonnaise`
+
+`db.burger.insertMany([
+    {
+        "patty" : "beef",
+        "cheese" : "false",
+        "toppings" : ["ketchup", "onions", "pickles"]
+        }, etc...`
+
 
 ## Reading
 
@@ -61,24 +91,42 @@ match that criteria before running the query.
 
 **Prompt:** What query would find all burgers with a `beef` patty?
 
+`db.burger.find({patty: "beef"})`
+
 **Prompt:** What query would find all burgers with cheese on them?
+
+`db.burger.find({cheese: "true"})
 
 **Prompt:** What query would find a burger by it's ObjectId?
 
+`db.burger.find({_id:ObjectId("6011d6fed141be67affa61eb")})`
+
 **Prompt:** What query would find all burgers with `ketchup` as a topping?
+
+`db.burger.find({toppings: "ketchup"})`
 
 **Prompt:** What query would find all burgers with either a turkey or veggie
 patty?
 
+`db.burger.find({patty: {$in: ["turkey","veggie"]}})`
+
 **Prompt:** What query would find all burgers with a beef patty and cheese?
+
+`db.burger.find({patty: "beef", cheese: "true"})`
 
 **Prompt:** What query would find all burgers with a beef patty and ketchup as
 a topping?
 
+` db.burger.find({patty: "beef", topping : {$all: ["ketchup"]}})`
+
 **Prompt:** What query would find all burgers with a beef patty and both onions
 and pickles as toppings?
 
+ db.burger.find({patty: "beef", topping : {$all: ["onions", "pickles"]}})
+
 **Prompt:** What query would find burgers with either a turkey patty or cheese?
+
+`db.burger.find( { $or: [ { patty: "turkey" }, { cheese: "true" } ] } )`
 
 ## Update
 
@@ -87,8 +135,17 @@ and pickles as toppings?
 **Prompt:** What query would update one burger by it's ObjectId, setting it's
 "patty" to "pork"?
 
+`db.burger.updateOne(
+   { _id : ObjectId("6011d6fed141be67affa61e5")},
+   {$set: { "patty": "port"}})`
+
 **Prompt:** What query would update all burgers with beef paddies to have
 cheese? (i.e. set "cheese" to true)
+
+`db.burger.updateMany(
+   { "patty": "beef" },
+   {$set: { "cheese": "true"},}
+)`
 
 ## Delete
 
@@ -96,6 +153,12 @@ cheese? (i.e. set "cheese" to true)
 
 **Prompt:** What query would delete a burger by it's ObjectId?
 
+`db.burger.deleteOne( { _id: ObjectId("6011d6fed141be67affa61e5") } )`
+
 **Prompt:** What query would delete all veggie burgers?
 
+`db.burger.deleteMany({ patty: "veggie" })`
+
 **Prompt:** What query would delete all burgers with pickles on them?
+
+`db.burger.deleteMany({toppings: ["pickles"]})`
